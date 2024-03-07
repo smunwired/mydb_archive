@@ -1,0 +1,12 @@
+table{
+    border: 1px solid black;
+    table-layout: fixed;
+    width: 80%;
+    align: center;
+}
+
+th, td {
+    border: 1px solid black;
+    overflow: hidden;
+    width: 20%;
+}

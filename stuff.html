@@ -1,0 +1,25 @@
+<html>
+<body>
+<h1>25-June-2015</h1>
+<ol>
+<li>Sharing violation editing html using samba connection on windows 7 ? Turn off the preview pane, not kidding...
+<li>need a static IP address ? Edit /etc/sysconfig/network-scripts/ifcfg-eth<i>n</i>
+<br/>Here is an example
+<pre>
+# cat /etc/sysconfig/network-scripts/ifcfg-eth0
+
+Sample static ip configuration:
+
+ 
+# Intel Corporation 82573E Gigabit Ethernet Controller (Copper)
+DEVICE=eth0
+BOOTPROTO=static
+DHCPCLASS=
+HWADDR=00:30:48:56:A6:2E
+IPADDR=192.168.1.10
+NETMASK=255.255.255.0
+ONBOOT=yes
+
+</pre>
+</body>
+</html>

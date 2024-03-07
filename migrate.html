@@ -1,0 +1,27 @@
+<html>
+<body>
+<h1>Migrating trxndb tables to MySQL</h1>
+<h2>background</h2>
+<li>create tables by hand on mysql no primary keys except tran_id on transdet.
+<li>added auto increment to tran_id after migration
+<li>python scripts to move data except freq, cost, something else
+<li>triggers audit.sql and audit.2sql for populating transdet audit before delete and before update
+<li> added id column to audit table, has auto_increment, is the primary key
+<li>added indexes to creditor_id on creditor and branch_id on branch, the lack of pk was killing the php pages.
+<li>creditor and branch have been renamed, created views to reflect old table and column names.
+<h2>cleardown</h2>
+<ol>
+<li>delete from transdet;
+<li>delete from transdet_audit;
+<li>alter table transdet modify column tran_id medium_int; (removes auto_increment);
+</ol>
+<h2>populate transdet and audit</h2>
+<ol>
+<li>mgrt3.py
+<li>audit.py
+<li>select max(tran_id) from transdet;
+<li>alter table transdet modify column tran_id mediumint auto_increment;
+<li>alter table transdet auto_increment=47280;
+</ol>
+</body>
+<html>

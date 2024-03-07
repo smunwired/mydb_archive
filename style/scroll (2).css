@@ -1,0 +1,57 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-size: 12px;
+    font-family: open sans;	
+}
+
+.leftpaddedcell {
+   padding-left:20px;
+   text-align:left;
+}
+
+.leftpaddedcellgray {
+   padding-left:20px;
+   text-align:left;
+   color:gray;
+   font-size:50%;
+}
+
+.cntr {
+   text-align:center;
+}
+
+.subheading {
+    color:gray;
+   font-size:50%;
+}
+
+p {
+  background-color:lightgray;
+  padding: 20px;
+}
+
+img {
+//  border:1px solid #021a40;
+  padding:1px;
+//  background-color:#ff0;
+}
+
+#left {
+    width: 10%;
+    height: 100%;
+    position: fixed;
+    background: #ffffff;
+    font-size: 18px;
+}
+#right {
+    width: 90%;
+    height: auto;
+    position: absolute;
+    right: 0;
+    background: #ffffff;
+    
+}
+

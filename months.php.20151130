@@ -1,0 +1,125 @@
+<!-- <?php include 'leftmenu.php'; ?> -->
+<?php include 'connect.php'; ?>
+<html>
+<head><style>
+body {
+    background-color: linen;
+}
+
+h1 {
+    color: maroon;
+    margin-left: 40px;
+}
+#thumbs {
+    width: 540px;
+    margin-top:90px;
+    margin-left: auto;
+    margin-right: auto;
+
+     text-align: justify;
+    -ms-text-justify: distribute-all-lines;
+    text-justify: distribute-all-lines;
+}
+#thumbs a {
+    vertical-align: top;
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+}
+.stretch {
+    width: 100%;
+    display: inline-block;
+    font-size: 0;
+    line-height: 0
+}
+h1 { text-align: center }
+</style>
+</head><body>
+<?php include connect.php; ?>
+<form method="get">
+<?php
+if (empty($_GET['chng'])) { echo "chng empty"; $chng = 0; } else { $chng = $_GET['chng']; } echo "chng" . $chng;
+if (empty($_GET['grp'])) { $grp="accd"; } if ($grp=="accd") {$grpnm="Account";}else{$grp="ttyd";$grpnm="Tran Type";}
+?>
+<input type="hidden" name="chng" value"=<?php echo $chng; ?>"></input>
+<div id="thumbs">
+	<table width="40%" align="center">
+	<tr>
+	<td>
+<!--	<a href="months.php?chng=<?php echo $_GET['chng'] - 1; ?>&grp=<?php echo $grp; ?>">less</a> -->
+	<a href="months.php?chng=<?php echo $chng - 1; ?>&grp=<?php echo $grp; ?>">less</a>
+	</td>
+	<td>
+<!--	<h1 align="center"><?php echo date("F Y", strtotime("+" . $_GET['chng'] . " months")); ?></h1> -->
+	<h1 align="center"><?php
+		if ($chng==0) {
+			echo date("F Y");
+		} else {
+			echo date("F Y", strtotime("+" . $chng . " months"));
+		}?></h1>
+	</td>
+	<td>
+<!--	<a href="months.php?chng=<?php echo $_GET['chng'] + 1; ?>&grp=<?php echo $grp; ?>">more</a> -->
+	<a href="months.php?chng=<?php echo $chng + 1; ?>&grp=<?php echo $grp; ?>">more</a>
+	</td>
+	</tr>
+	</table>
+	<table 	width="30%" align="right">
+		<tr>
+			<td>acc</td>
+			<td><input type="radio" onchange="this.form.submit();" name="grp" value="accd"></input></td>
+			<td>tty</td>
+			<td><input type="radio" onchange="this.form.submit();" name="grp" value="ttyd"></input><td
+		</tr>
+	</table>
+</div>
+<table>
+<?php
+	$whr = " and 1=1 ";
+	$ordcol = "tran_id";
+	$limit = 22;
+
+	//$sql="select tran_id tid,tran_date trd,
+	//	case when length(c2.nm)!=0 then concat(c1.nm,', ',c2.nm) when length(c1.nm)!=0 then c1.nm else 'tran_creditor' end crd, /*last one should never happen */
+	//	tran_type.tran_type tty,account.account_name acc,tran_desc dsc, tran_amount*cr_dr amt, receipt_ind rcpt, dd_ind dd, statement_date std,cheque_no chq,
+	//	date_created dtc, date_amended dta, freq_name frq, cost cst,crdd,brnd
+	$sql =
+		"select tran_type.tran_type tty,sum(transdet.tran_amount) amt
+		from transdet
+		left join frequency on transdet.frequency = frequency.freq_id
+		left join cost_center on transdet.cost_code = cost_center.cost_code
+		left join crd c1 on crdd=c1.id
+		left join crd c2 on brnd=c2.id
+		join account on transdet.account_id=account.account_id
+		join tran_type on transdet.tran_type_id=tran_type.tran_type_id
+		where " . $ordcol . " is not null " . $whr . " and date_format(tran_date,'%M %Y')='" . date("F Y", strtotime("+" . $_GET['chng'] . " months")) . "' group by transdet.tran_type_id order by " . $ordcol . " " . $orddr .
+		" limit " . $limit;
+		echo "<p/>" . $sql;
+	foreach($conn->query($sql) as $row) {
+		if ($row['rcpt']==1) {$rcpt="checked";} else {$rcpt="";}
+		if ($row['dd']==1) {$dd="checked";}else{$dd="";}
+		echo "<tr>
+			<!-- <td>" . $row['tid'] . "</td> -->
+				<td style=\"width:20px; height:20px;\">" . $row['trd'] . "</td>
+				<td style=\"width:100px; height:20px;\">" . $row['crd'] . "</td>
+				<td style=\"width:100px; height:20px;\">" . $row['dsc'] . "</td>
+				<td>" . $row['tty'] . "</td>
+				<td>" . $row['acc'] . "</td>
+				<td align=center>" . $row['amt'] . "</td>
+				<td><input type=\"checkbox\" " . $rcpt . "></input></td>
+  				<td><input type=\"checkbox\" " . $dd . "></input></td>
+  				<td style=\"width:20px; height:20px;\">" . $row['std'] . "</td>
+  				<td>" . $row['chq'] . "</td>
+  				<td>" . $row['frq'] . "</td>
+  				<td>" . $row['cst'] . "</td>
+  				<!-- <td>" . $row['dtc'] . "</td><td>" . $row['dta']. "</td> -->
+  				<td><a href=\"form.php?tid=" . $row['tid'] . "\">mod</a></td>
+				<td><a href=\"post.php?addmod=del&tid=" . $row['tid'] . "\">del</a></td>
+			</tr>";
+
+	}
+?>
+
+</table>
+</form>
+<?php include sitemap.php; ?>

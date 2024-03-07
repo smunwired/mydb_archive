@@ -1,0 +1,47 @@
+
+
+<?php
+
+include '../connect.php';
+
+try {
+
+$sql="select * from artist where id=" . $_GET[id];
+echo $sql;
+$query = mysql_query($sql);
+
+$row = mysql_fetch_array($query);
+echo $row['lastname'];
+
+}catch(PDOExeception $e){
+	echo "Exception " . $e->getMessage();
+}
+
+
+
+
+
+
+
+?>
+
+<html>
+<head>
+      <title></title>
+ </head>
+
+<body>
+<h1>artist modify form</h1>
+
+<form method="post" action="artstmdp.php">
+  prefix <input type="text" value="<?php echo $row[prefix]?>"/> </br>
+  firstname <input type="text" value="<?php echo $row['firstname']?>"/> </br>
+  lastname <input type="text" value="<?php echo $row[lastname]?>"/> </br>
+  joinstr <input type="text" value="<?php echo $row[joinstr]?>"/> </br>
+  bandname <input type="text" value="<?php echo $row[bandname]?>"/> </br>
+  collaborators <input type="text" value="<?php echo $row[collaborators]?>"/> </br>
+</form>
+
+</body>
+
+</html>
